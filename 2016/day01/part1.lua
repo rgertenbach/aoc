@@ -1,46 +1,55 @@
-package.path = "../utils/?.lua;" .. package.path
-local su = require("string_utils")
-
-local function parse(s)
-  local out = {}
-  out.dir = s:sub(1, 1)
-  out.amt = math.tointeger(s:sub(2, #s))
-  return out
+local function rotate(orientation, rotation)
+  if orientation == 'N' then
+    return rotation == 'R' and 'E' or 'W'
+  elseif orientation == 'E' then
+    return rotation == 'R' and 'S' or 'N'
+  elseif orientation == 'S' then
+    return rotation == 'R' and 'W' or 'E'
+  elseif orientation == 'W' then
+    return rotation == 'R' and 'N' or 'S'
+  end
 end
 
-local FACE = {
-  UR = "R", UL = "L",
-  DR = "L", DL = "R",
-  RR = "D", RL = "U",
-  LR = "U", LL = "D",
-}
 
+local function move(x, y, orientation, steps)
+  if orientation == "N" then return x, y + steps
+  elseif orientation == "S" then return x, y - steps
+  elseif orientation == "W" then return x - steps, y
+  elseif orientation == "E" then return x + steps, y
+  end
+end
+
+local function follow_instruction(instruction, x, y, orientation)
+  local rotation = string.sub(instruction, 1, 1)
+  local steps = tonumber(string.sub(instruction, 2))
+  orientation = rotate(orientation, rotation)
+  x, y = move(x, y, orientation, steps)
+
+  return x, y, orientation
+end
+
+local function split(instructions)
+  return string.gmatch(instructions, "%a%d+")
+end
+
+local function follow_tape(instructions, x, y, orientation)
+  for instruction in split(instructions) do
+    x, y, orientation = follow_instruction(instruction, x, y, orientation)
+  end
+  return x, y, orientation
+end
 
 local function main()
-  for i = 1, #arg do
-    print(arg[i])
-    local file = io.open(arg[i], "r")
-    if file == nil then
-      print("Could not open " .. arg[i])
-      os.exit(1)
-    end
-    local data = file:read("a")
-    file:close()
-    local moves = su.split(data, ", ")
-    local pos = {x = 0, y = 0, f="U"}
-    for _, move in ipairs(moves) do
-      local m = parse(move)
-      pos.f = FACE[pos.f .. m.dir]
-      if pos.f == "L" then pos.x = pos.x - m.amt
-      elseif pos.f == "R" then pos.x = pos.x + m.amt
-      elseif pos.f == "U" then pos.y = pos.y - m.amt
-      elseif pos.f == "D" then pos.y = pos.y + m.amt
-      else print("Panic") os.exit(1)
-      end
-    end
-    print(math.abs(pos.x) + math.abs(pos.y))
-
+  local file = io.open("input.txt")
+  if file == nil then
+    return
   end
+  local instructions = file:read("l")
+  local x, y = follow_tape(instructions, 0, 0, "N")
+  x = math.abs(x)
+  y = math.abs(y)
+  print(x + y)
+  file:close()
 end
 
 main()
