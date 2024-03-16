@@ -1,29 +1,39 @@
 import sys
 import modules
 from collections import deque
+import math
+
+RX = 'rx'
+CL = 'cl'
 
 
-def one_pulse(mods: dict[str, modules.Module]) -> bool:
+def one_pulse(mods: dict[str, modules.Module]) -> str | None:
   broadcaster = mods['broadcaster']
   pulses = deque(broadcaster.activate(modules.BUTTON_PULSE))
+  activated = None
   while pulses:
     delivery: modules.Delivery = pulses.popleft()
-    if delivery.dest == 'rx' and delivery.pulse.pulse is modules.Pulse.LOW:
-      return True
+    if delivery.dest == CL and delivery.idpulse.pulse is modules.Pulse.HIGH:
+      if activated is not None: print('conflict')
+      activated = delivery.idpulse.src
     if delivery.dest in mods:
-      pulses.extend(mods[delivery.dest].activate(delivery.pulse))
-  return False
+      pulses.extend(mods[delivery.dest].activate(delivery.idpulse))
+  if any(p is modules.Pulse.HIGH for p in mods[CL].last_pulses.values()):
+    print('aad')
+  return activated
 
 
 def part2(mods: dict[str, modules.Module]) -> int:
   rounds = 0
-  while True:
-    if one_pulse(mods): break
+  phase = {}
+  for _ in range(10000):
+    activated = one_pulse(mods)
+    if activated is not None:
+      if activated not in phase:
+        phase[activated] = rounds + 1
     rounds += 1
-    if rounds % 1_000 == 0:
-      print('\r  -> ', f'{rounds:,d}', '\r', end='')
-
-  return rounds + 1
+  print(phase)
+  return math.lcm(*list(phase.values()))
 
 
 def update_conjunctions(mods: dict[str, modules.Module]) -> None:
@@ -49,10 +59,4 @@ def main() -> None:
 
 if __name__ == '__main__':
   main()
-  
 
-# High pulse or low pulse sent to each module in list of destination modules
-
-# Modules
-# - Flip Flop (%) can be on or off, start as off, high is ignored, low flips (on = high, off=low)
-# - Conjunction (&) remember last pulse from each input module, starting with low. When it re

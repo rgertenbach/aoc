@@ -31,7 +31,7 @@ BUTTON_PULSE = IdentifiedPulse('button', Pulse.LOW)
 
 class Delivery(NamedTuple):
   dest: str
-  pulse: IdentifiedPulse
+  idpulse: IdentifiedPulse
 
   def __str__(self) -> str:
     return f'{self.pulse} > {self.dest}'
@@ -70,7 +70,7 @@ class FlipFlop(Module):
     self.state = self.state.flip()
     for dest in self.dests:
       yield Delivery(
-          dest, 
+          dest,
           IdentifiedPulse(
             self.name,
             Pulse.HIGH if self.state is State.ON else Pulse.LOW))
@@ -95,7 +95,8 @@ class Conjunction(Module):
     return all(p is Pulse.HIGH for p in self.last_pulses.values())
 
   def __str__(self) -> str:
-    return f'Conjunction {self.name} that remembers {self.last_pulses} to {self.dests}'
+    pulses = ', '.join(f'{k}: {v.value}' for k, v in self.last_pulses.items())
+    return f'Conjunction {self.name} that remembers {{{pulses}}} to {self.dests}'
 
   def extend(self, inputs: list[str]) -> None:
     for x in inputs:
