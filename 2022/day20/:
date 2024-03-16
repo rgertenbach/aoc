@@ -1,0 +1,89 @@
+class CLE:
+  def __init__(self, value, left=None, right=None):
+    self.val = value
+    self.left = left
+    self.right = right
+    self.l = None
+
+  def move_right(self, n: int) -> None:
+    goal = self[n]
+
+    self.left.right, self.right.left = self.right, self.left
+    self.right = goal
+    goal.left.right = self
+    self.left = goal.left
+    goal.left = self
+
+  def move_left(self, n: int):
+    l = len(self)
+    n = n % l
+    self.move_right(l - n)
+
+  def __len__(self) -> int:
+    if self.l is not None:
+      return self.l
+    l = 1
+    p = self
+    while (p := p.right) != self:
+      l += 1
+    self.l = l
+    return l
+
+  def __getitem__(self, n) -> 'CLE':
+    n = n % len(self)
+    goal = self
+    for i in range(n):
+      goal = goal.right
+
+  def find(self, val) -> 'CLE':
+    x = self
+    while x.val != val:
+      x = x.right
+    return x
+
+  def __str__(self) -> str:
+    out = []
+    out.append(self.val)
+    x = self
+    while (x := x.right) != self:
+      out.append(x.val)
+    return str(out)
+    
+
+def load(filename: str):
+  with open(filename) as f:
+    nodes = f.read().strip().split('\n')
+  out = []
+  for n in nodes:
+    val = int(n)
+    node = CLE(val)
+    if out:
+      node.left = out[-1]
+      out[-1].right = node
+    out.append(node)
+
+  out[0].left = out[-1]
+  out[-1].right = out[0]
+
+  return out
+
+
+def process(l: list[CLE]) -> CLE:
+  for e in l:
+    print(f'moving {e.val}')
+    if e.val > 0:
+      e.move_right(e.val)
+    elif e.val < 0:
+      e.move_left(-e.val)
+  return l[0]
+
+
+
+def main():
+  l = load('test_input.txt')
+  print(f'{l[0].left.val=} <- {l[0].val} -> {l[0].right.val}')
+  process(l)
+
+
+if __name__ == '__main__':
+  main()
