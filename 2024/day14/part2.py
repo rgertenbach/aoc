@@ -24,10 +24,11 @@ def plot(robots: list[tuple[int, int, int, int]]) -> str:
 
 i = 0
 
-with open("output.txt", "w") as f:
-  while True:
-    if i >= 10000: break
-    f.write(plot(robots))
-    f.write(f"{i}\n")
-    robots = [simulate(robot, 1) for robot in robots]
-    i += 1
+while True:
+  robots = [simulate(robot, 1) for robot in robots]
+  if 'OOOOOOOO' in plot(robots):
+    print(plot(robots))
+    print(i)
+    input()
+
+  i += 1
