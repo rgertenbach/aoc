@@ -1,6 +1,5 @@
 import moves as m
 from functools import cache
-import numpy as np
 
 with open("input.txt") as f: codes = f.read().strip("\n").split("\n")
 
