@@ -1,55 +1,22 @@
-package.path = '/home/robin/lua/lib/?.lua;' .. package.path
+local function surface(length, width, height)
+  local a1 = length * width
+  local a2 = width * height
+  local a3 = length * height
+  return 2 * a1 + 2 * a2 + 2 * a3 + math.min(a1, a2, a3)
+end
 
-local rstring = require "rstring"
-
-local function parse_dims(s)
+local function parse_dims(line)
   local dims = {}
-  for dim in rstring.split(s, 'x') do
-    table.insert(dims, math.tointeger(dim))
+  for dim in line:gmatch("%d+") do
+    table.insert(dims, tonumber(dim))
   end
-  table.sort(dims)
   return dims
 end
 
-local function required_area(dims)
-  table.sort(dims)
-  local extra = dims[1] * dims[2]
-  return 3 * extra + 2 * dims[1] * dims[3] + 2 * dims[2] * dims[3]
+local f = assert(io.open("input.txt"))
+local total = 0
+for line in f:lines() do
+  local dims = parse_dims(line)
+  total = total + surface(table.unpack(dims))
 end
-
-local function load_input(filename)
-  local f = assert(io.open(filename, "r"))
-  local out = {}
-  for row in f:lines() do
-    table.insert(out, parse_dims(row))
-  end
-  return out
-end
-
-local function part1(filename)
-  local boxes = load_input(filename)
-  local total = 0
-  for _, dims in pairs(boxes) do
-    total = total + required_area(dims)
-  end
-  return total
-end
-
-local function ribbon_length(dims)
-  table.sort(dims)
-  return 2 * dims[1] + 2 * dims[2] + dims[1] * dims[2] * dims[3]
-end
-
-local function part2(filename)
-  local boxes = load_input(filename)
-  local total = 0
-  for _, dims in pairs(boxes) do
-    total = total + ribbon_length(dims)
-  end
-  return total
-
-end
-
-
-print(part1("input.txt"))
-print(part2("input.txt"))
+print(total)
