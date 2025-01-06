@@ -1,4 +1,7 @@
--- Not UTF-8 safe.
+---Splits a string into characters.
+---Not UTF-8 safe.
+---@param s string
+---@return string[] Characters
 local function split_empty(s)
   local out = {}
   for i = 1, #s do
@@ -9,6 +12,10 @@ end
 
 local m = {}
 
+---Splits a string by a delimiter.
+---@param s string The string to split.
+---@param sep string Separator.
+---@return string[] Split
 function m.split(s, sep)
   local out = {}
   local word_start = 1

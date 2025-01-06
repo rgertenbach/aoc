@@ -1,6 +1,6 @@
-package.path = "../utils/?.lua;" .. package.path
-
-local su = require("string_utils")
+package.path = "../lua/?.lua;" .. package.path
+local str = require("str")
+local tbl = require("tbl")
 
 local KEYPAD = {
   {1, 2, 3},
@@ -19,9 +19,9 @@ local KEYPAD2 = {
 local function part1(instructions)
   local x, y = 2, 2  -- 5
   local out = 0
-  for _, instruction in ipairs(instructions) do
-    local moves = su.split(instruction, "")
-    for _, move in ipairs(moves) do
+  for instruction in tbl.valuesi(instructions) do
+    local moves = str.split(instruction, "")
+    for move in tbl.valuesi(moves) do
       if move == "U" and y > 1 then y = y - 1
       elseif move == "D" and y < 3 then y = y + 1
       elseif move == "L" and x > 1 then x = x - 1
@@ -37,9 +37,9 @@ end
 local function part2(instructions)
   local x, y = 1, 3  -- 5
   local out = ""
-  for _, instruction in ipairs(instructions) do
-    local moves = su.split(instruction, "")
-    for _, move in ipairs(moves) do
+  for instruction in tbl.valuesi(instructions) do
+    local moves = str.split(instruction, "")
+    for move in tbl.valuesi(moves) do
       if move == "U" then
         if y == 2 and x == 3 then y = y - 1
         elseif (y == 3 or y == 4) and (x == 2 or x == 3 or x == 4) then y = y - 1
@@ -78,7 +78,7 @@ local function main()
     end
     local instructions_raw = file:read("a")
     file:close()
-    local instructions = su.split(instructions_raw, "\n")
+    local instructions = str.split(instructions_raw, "\n")
     io.stdout:write(part1(instructions), "\n")
     io.stdout:write(part2(instructions), "\n\n")
   end

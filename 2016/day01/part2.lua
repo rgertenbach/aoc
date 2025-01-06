@@ -1,35 +1,30 @@
-local function rotate(orientation, rotation)
-  if orientation == 'N' then
-    return rotation == 'R' and 'E' or 'W'
-  elseif orientation == 'E' then
-    return rotation == 'R' and 'S' or 'N'
-  elseif orientation == 'S' then
-    return rotation == 'R' and 'W' or 'E'
-  elseif orientation == 'W' then
-    return rotation == 'R' and 'N' or 'S'
-  end
-end
+package.path = "../lua/?.lua;" .. package.path
+local str = require("str")
+local tbl = require("tbl")
+local grid = require("grid")
 
-local function move(x, y, orientation, steps)
-  if orientation == "N" then return x, y + steps
-  elseif orientation == "S" then return x, y - steps
-  elseif orientation == "W" then return x - steps, y
-  elseif orientation == "E" then return x + steps, y
-  end
-end
+---@alias Point [integer, integer]
+---@alias Line [integer, integer, integer, integer]
 
+---@param instruction string
+---@param x integer
+---@param y integer
+---@param orientation Direction
 local function follow_instruction(instruction, x, y, orientation)
-  local rotation = string.sub(instruction, 1, 1)
+  local rotation = (
+    string.sub(instruction, 1, 1) == "R"
+    and grid.Turn.CLOCKWISE
+    or grid.Turn.COUNTERCLOCKWISE)
   local steps = tonumber(string.sub(instruction, 2))
-  orientation = rotate(orientation, rotation)
-  x, y = move(x, y, orientation, steps)
+  orientation = grid.turn(orientation, rotation)
+  y, x = grid.move(y, x, orientation, steps)
   return x, y, orientation
 end
 
-local function split(instructions)
-  return string.gmatch(instructions, "%a%d+")
-end
-
+---TODO: Fix
+---@param p1 Line
+---@param p2 Line
+---@return integer, integer
 local function intersect(p1, p2)
   if p1[1] == p1[3] then  -- Vertical
     if p2[1] == p2[3] then -- Also vertical
@@ -40,6 +35,7 @@ local function intersect(p1, p2)
       if p2[4] >= p1[2] and p2[4] <= p1[4] then return true end
       return false
     end
+    return false
     -- Crossing
   end
   if p1[2] == p1[4] then  -- Horizontal
@@ -52,8 +48,12 @@ local function intersect(p1, p2)
       if p2[3] >= p1[1] and p2[3] <= p1[4] then return true end
     end
   end
+  return false
 end
 
+---@param paths Line[]
+---@param path Line
+---@return integer, integer
 local function any_intersect(paths, path)
   for _, other in ipairs(paths) do
     local int_x, int_y = intersect(other, path)
@@ -62,14 +62,19 @@ local function any_intersect(paths, path)
   return nil
 end
 
+---@param instructions string
+---@param x integer column
+---@param y integer row
+---@param orientation Direction
+---@return integer, integer, Direction
 local function follow_tape(instructions, x, y, orientation)
   local paths = {}
-  for instruction in split(instructions) do
+  for instruction in tbl.valuesi(str.split(instructions, ", ")) do
     local old_x, old_y = x, y
     x, y, orientation = follow_instruction(instruction, x, y, orientation)
-    path  = {old_x, old_y, x, y}
+    local path  = {old_x, old_y, x, y}
     local int_x, int_y = any_intersect(paths, path)
-    if int_x then return int_x, int_y end
+    if int_x then return int_x, int_y, orientation end
     paths[#paths] = path
   end
   return x, y, orientation
@@ -81,7 +86,7 @@ local function main()
     return
   end
   local instructions = file:read("l")
-  local x, y = follow_tape(instructions, 0, 0, "N")
+  local x, y = follow_tape(instructions, 0, 0, grid.Direction.NORTH)
   x = math.abs(x)
   y = math.abs(y)
   print(x)
