@@ -1,4 +1,4 @@
-package.path = "../utils/?.lua;" .. package.path
+package.path = "../lua/?.lua;" .. package.path
 local md5 = require("md5")
 
 local function has_all(t, n)

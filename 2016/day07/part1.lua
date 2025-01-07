@@ -1,5 +1,5 @@
-package.path = "../utils/?.lua;" .. package.path
-local su = require("string_utils")
+package.path = "../lua/?.lua;" .. package.path
+local str = require("str")
 
 ---@param s string the input
 local function is_palindrome(s) return s == s:reverse() end
@@ -29,7 +29,7 @@ local function parse(s)
   local out = {hnss = {}}
   local pat = "%[(.-)%]"
   for m in s:gmatch(pat) do table.insert(out.hnss, m) end
-  out.coms = su.split(s:gsub(pat, ","), ",")
+  out.coms = str.split(s:gsub(pat, ","), ",")
   return out
 end
 

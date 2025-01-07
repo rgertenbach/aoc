@@ -1,10 +1,10 @@
-package.path = "../utils/?.lua;" .. package.path
+package.path = "../lua/?.lua;" .. package.path
 
-local su = require("string_utils")
+local str = require("str")
 
 local function parse_input(s)
 
-  local split = su.split(s, "%[")
+  local split = str.split(s, "%[")
   local checksum = split[2]:sub(1, #split[2] - 1)
   local sector_id = math.tointeger(split[1]:match("%d+"))
   local room = split[1]:match("[a-z-]+")

@@ -1,5 +1,3 @@
-package.path = "../utils/?.lua;" .. package.path
-
 for i = 1, #arg do
   io.stdout:write(arg[i], "\n")
   local file = assert(io.open(arg[i], "r"))
