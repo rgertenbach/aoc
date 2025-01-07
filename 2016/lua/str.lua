@@ -26,7 +26,9 @@ function m.split(s, sep)
     table.insert(out, s:sub(word_start, sep_start - 1))
     word_start = sep_end + 1
   end
+  if word_start <= #s then
     table.insert(out, s:sub(word_start, #s))
+  end
   return out
 end
 

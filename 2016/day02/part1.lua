@@ -1,5 +1,4 @@
-package.path = "../lua/?.lua;" .. package.path
-local str = require("str")
+package.path = "../lua/?.lua;" .. package.path local str = require("str")
 local tbl = require("tbl")
 
 local KEYPAD = {
@@ -38,7 +37,7 @@ local function main()
     local instructions_raw = file:read("a")
     file:close()
     local instructions = str.split(instructions_raw, "\n")
-    io.stdout:write(part1(instructions), "\n")
+    print(part1(instructions), "\n")
   end
 end
 
