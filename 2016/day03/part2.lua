@@ -1,9 +1,9 @@
-package.path = "../utils/?.lua;" .. package.path
-local su = require("string_utils")
+package.path = "../lua/?.lua;" .. package.path
+local str = require("str")
 
 local function parse_line(line)
   local cleaned = line:gsub(" +", " "):gsub("^ ", "")
-  local a, b, c = table.unpack(su.split(cleaned, " "))
+  local a, b, c = table.unpack(str.split(cleaned, " "))
   return math.tointeger(a), math.tointeger(b), math.tointeger(c)
 end
 
