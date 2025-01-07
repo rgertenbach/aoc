@@ -1,5 +1,5 @@
-package.path = "../utils/?.lua;" .. package.path
-local collections = require("collections")
+package.path = "../lua/?.lua;" .. package.path
+local tbl = require("tbl")
 local robots = require("robots")
 
 START_VALUE_PAT = "^value (%d+) goes to (bot %d+)$"
@@ -9,7 +9,7 @@ for i = 1, #arg do
   io.stdout:write(arg[i], "\n")
   local file = assert(io.open(arg[i], "r"))
 
-  local bots = collections.defaultdict(robots.Bot.new, true)
+  local bots = tbl.defaultdict(robots.Bot.new, true)
 
   for line in file:lines() do
     if line:sub(1, 5) == "value" then

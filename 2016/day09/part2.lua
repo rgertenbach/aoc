@@ -1,5 +1,3 @@
-package.path = "../utils/?.lua;" .. package.path
-
 local function parse(s, i)
   local last = i
   local nreps = 0

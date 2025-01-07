@@ -1,5 +1,3 @@
-package.path = "../utils/?.lua;" .. package.path
-
 local function parse(s)
   local out = {}
   local i = 1
