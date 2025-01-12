@@ -2,8 +2,6 @@ package.path = "/home/robin/src/aoc/2016/lua/?.lua;" .. package.path
 
 
 local md5 = require("md5")
-local tbl = require("tbl")
-local Deque = require("deque").Deque
 
 local input = "yjdafjpo"
 local test_input = "abc"
