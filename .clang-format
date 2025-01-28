@@ -1,0 +1,6 @@
+---
+BasedOnStyle: GNU
+IndentWidth: 4
+PointerAlignment: Middle
+SpaceBeforeParens: ControlStatements
+BreakBeforeBraces: WebKit

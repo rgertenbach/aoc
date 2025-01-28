@@ -1,3 +1,3 @@
 Lua with some helper utils. 
 
-(Need to update Day 1 - 10)
+Helpers are in https://github.com/rgertenbach/llib
