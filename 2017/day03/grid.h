@@ -1,14 +1,11 @@
 #ifndef GRID_H
 #define GRID_H
 #include <stdint.h>
-#include "uthash.h"
 enum Direction { D_RIGHT = 1, D_UP = 2, D_LEFT = 3, D_DOWN = 4 };
 
 struct Point {
     int row;
     int col;
-    int64_t value;
-    UT_hash_table * hh;
 };
 
 extern inline struct Point
