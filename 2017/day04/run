@@ -1,0 +1,7 @@
+#!/bin/sh
+clang \
+    part1.c \
+    /home/robin/src/clib/string/split.c \
+    /home/robin/src/clib/string/str.c
+./a.out "$@"
+rm a.out
