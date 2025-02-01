@@ -76,5 +76,10 @@ main(void)
             part2_done = true;
         };
     }
+    struct Square * tmp1, * tmp2;
+    HASH_ITER(hh, grid, tmp1, tmp2) {
+        HASH_DEL(grid, tmp1);
+        free(tmp1);
+    }
     printf("Part 1: %d\n", abs(p.row) + abs(p.col));
 }
