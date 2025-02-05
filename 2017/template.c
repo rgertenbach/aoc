@@ -17,7 +17,6 @@ int main(int const argc, char const * const * const argv)
     }
     char * s = malloc(MAXLEN);
 
-    int valid = 0;
     while (fgets(s, MAXLEN, f)) {
         s[strlen(s) - 1] = '\0';  // Trim newline.
     }
