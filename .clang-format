@@ -4,3 +4,7 @@ IndentWidth: 4
 PointerAlignment: Middle
 SpaceBeforeParens: ControlStatements
 BreakBeforeBraces: WebKit
+AlignAfterOpenBracket: BlockIndent
+AllowShortBlocksOnASingleLine: Always
+SpacesBeforeTrailingComments: 2
+BinPackParameters: false
