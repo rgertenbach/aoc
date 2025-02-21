@@ -8,27 +8,26 @@
 
 struct Knot {
     size_t length;
-    size_t pos;
-    size_t skip;
+    uint8_t pos;
+    uint8_t skip;
     uint8_t arr[MAX_KNOT_LEN];
 };
 
 void
 half_twist(struct Knot * const knot, size_t const k)
 {
-    size_t left = knot->pos;
-    size_t right = (left + k - 1) % knot->length;
+    uint8_t left = knot->pos;
+    uint8_t right = left + k - 1;
     size_t off = k;
     while (off > 1) {
         uint8_t temp = knot->arr[left];
         knot->arr[left] = knot->arr[right];
         knot->arr[right] = temp;
-        right = (right + knot->length - 1) % knot->length;
-        left = (left + 1) % knot->length;
+        right = right + knot->length - 1;
+        left++;
         off -= 2;
     }
     knot->pos += k + knot->skip++;
-    knot->pos %= knot->length;
 }
 
 #endif  // HASH_H
