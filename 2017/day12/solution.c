@@ -67,11 +67,13 @@ set_clear(struct IntSet ** set)
 }
 
 size_t
-part1(struct Graph * const graph)
+cluster_size(
+    struct Graph * const graph, struct IntSet ** visited, int32_t const start
+)
 {
-    struct Graph * node = get_node(graph, 0);
-    struct IntSet * visited = NULL;
-    set_add(&visited, 0);
+    size_t out = 1;
+    struct Graph * node = get_node(graph, start);
+    set_add(visited, start);
     struct Graph * current[MAXIDS] = { node };
     size_t n_current = 1;
     struct Graph * next[MAXIDS] = { node };
@@ -81,9 +83,10 @@ part1(struct Graph * const graph)
             node = current[i];
             for (size_t n = 0; n < node->n_neighbors; ++n) {
                 struct Graph * neighbor = get_node(graph, node->neighbors[n]);
-                if (!set_has(visited, neighbor->node)) {
-                    set_add(&visited, neighbor->node);
+                if (!set_has(*visited, neighbor->node)) {
+                    set_add(visited, neighbor->node);
                     next[n_next++] = neighbor;
+                    out++;
                 }
             }
         }
@@ -92,8 +95,6 @@ part1(struct Graph * const graph)
         n_current = n_next;
         n_next = 0;
     }
-    size_t out = HASH_COUNT(visited);
-    set_clear(&visited);
     return out;
 }
 
@@ -112,13 +113,27 @@ main(int const argc, char const * const * const argv)
     char s[MAXLEN];
 
     struct Graph * graph = NULL;
+    struct IntSet * visited = NULL;
+    size_t n_nodes = 0;
+    size_t n_clusters = 0;
 
     while (fgets(s, MAXLEN, f)) {
         s[strlen(s) - 1] = '\0';  // Trim newline.
         process_line(&graph, s);
+        n_nodes++;
     }
     fclose(f);
-    printf("%zu\n", part1(graph));
+    for (size_t i = 0; i < n_nodes; ++i) {
+        if (set_has(visited, i)) {
+            continue;
+        }
+        size_t sz = cluster_size(graph, &visited, i);
+        if (i == 0) {
+            printf("Part 1: %zu\n", sz);
+        }
+        n_clusters++;
+    }
 
+    printf("Part 2: %zu\n", n_clusters);
     return 0;
 }
