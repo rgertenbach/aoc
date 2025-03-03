@@ -15,10 +15,11 @@ int main(int const argc, char const * const * const argv)
         fprintf(stderr, "Could not open %s\n", argv[1]);
         exit(1);
     }
-    char * s = malloc(MAXLEN);
+    char s[MAXLEN];
 
     while (fgets(s, MAXLEN, f)) {
         s[strlen(s) - 1] = '\0';  // Trim newline.
     }
     fclose(f);
+    return 0;
 }
