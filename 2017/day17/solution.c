@@ -26,12 +26,10 @@ part2(ptrdiff_t const jump)
 {
     size_t i = 1;
     size_t p = 1;
-    size_t sz = 2;
     int after0 = 1;
     while (i++ < N2) {
-        p = (p + jump) % sz + 1;
+        p = (p + jump) % i + 1;
         if (p == 1) {after0 = i;}
-        sz++;
     }
     return after0;
 }
