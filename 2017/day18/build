@@ -1,0 +1,13 @@
+#!/bin/sh
+name="$1"
+file="$2"
+
+clang \
+    -Wall -Wextra -Werror -pedantic \
+    -o "${name}" \
+    -std=c23 \
+    "${name}.c"
+
+"./${name}" "${file}"
+
+rm "${name}"
