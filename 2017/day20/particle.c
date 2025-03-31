@@ -5,10 +5,7 @@
 int64_t
 abs64(int64_t x)
 {
-    if (x < 0) {
-        return -x;
-    }
-    return x;
+    return (x < 0) ? -x : x;
 }
 
 int64_t
@@ -53,7 +50,6 @@ struct Particle
 move(struct Particle const particle)
 {
     struct Particle out = particle;
-    out.idx = particle.idx;
     out.vel = V3_add(out.vel, out.acc);
     out.pos = V3_add(out.pos, out.vel);
     return out;
@@ -69,6 +65,7 @@ size_t
 format_particle(char * restrict dst, const struct Particle particle)
 {
     size_t written = 0;
+    written += sprintf(dst + written, "%zu ", particle.idx);
     written += sprintf(dst + written, "p=");
     written += format_v3(dst + written, particle.pos);
     written += sprintf(dst + written, ", v=");
@@ -90,13 +87,19 @@ int
 particle_sort(const void * const a, const void * const b)
 {
     int l1d = l1_difference(a, b);
-    if (!l1d) {
+    if (l1d) {
         return l1d;
     }
     struct Particle * x = (struct Particle *)a;
     struct Particle * y = (struct Particle *)b;
-    if (x->pos.x != y->pos.x) { return x->pos.x - y->pos.x; }
-    if (x->pos.y != y->pos.y) { return x->pos.y - y->pos.y; }
-    if (x->pos.z != y->pos.z) { return x->pos.z - y->pos.z; }
+    if (x->pos.x != y->pos.x) {
+        return x->pos.x - y->pos.x;
+    }
+    if (x->pos.y != y->pos.y) {
+        return x->pos.y - y->pos.y;
+    }
+    if (x->pos.z != y->pos.z) {
+        return x->pos.z - y->pos.z;
+    }
     return 0;
 }

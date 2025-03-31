@@ -4,10 +4,26 @@ file="$2"
 
 clang \
     -Wall -Wextra -Werror -pedantic \
+    -o 'particle_test' \
+    -std=c23 \
+    particle_test.c \
+    particle.c
+
+./particle_test
+if [ $? ]; then
+    exit
+fi
+
+
+
+
+clang \
+    -Wall -Wextra -Werror -pedantic \
     -o "${name}" \
     -g \
+    -std=c23 \
     "${name}.c" \
-    particle.c
+    particle.c \
 
 "./${name}" "${file}"
 

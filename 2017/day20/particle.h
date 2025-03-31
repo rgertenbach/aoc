@@ -30,6 +30,7 @@ size_t format_particle(char * restrict dst, struct Particle const particle);
 
 size_t format_v3(char * restrict dst, struct V3 const v);
 
+// Can be used to sort by which particle is further from the origin.
 int l1_difference(void const * const a, void const * const b);
 int particle_sort(void const * const a, void const * const b);
 

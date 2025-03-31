@@ -2,20 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define LOG_IMPL
+#include "/home/robin/src/clib/logging/log.h"
+enum LogLevel LOG_LEVEL = LOG_WARN;
 
 #define MAXLEN 1000
 
-size_t remove_collisions(struct Particle * particles, size_t n)
-{
-    qsort(particles, n, sizeof(*particles), l1_difference);
-    size_t left = 0, right = 0;
-    size_t n_same = 0;
-    for (; right < n; ++right) {
-
-    }
-    return left + right + n_same;
-    return n;
-}
 
 int
 main(int const argc, char const * const * const argv)
@@ -40,11 +32,23 @@ main(int const argc, char const * const * const argv)
     fclose(f);
 
     for (size_t iter = 0; iter < 1000; iter++) {
+        LOG(LOG_DEBUG, "%zu: Moving %zu particles\n", iter, np);
         for (size_t i = 0; i < np; ++i) {
             particles[i] = move(particles[i]);
         }
-        np = remove_collisions(particles, np);
     }
-    printf("Part 1: %zu\n", particles[0].idx);
+
+    int64_t min_dist = INT64_MAX;
+    size_t which_min = SIZE_MAX;
+
+    for (size_t i = 0; i < np; i++) {
+        int64_t d = l1(particles[i].pos, ORIGIN);
+        if (d < min_dist) {
+            min_dist = d;
+            which_min = i;
+        }
+    }
+
+    printf("Part 1: %zu\n", which_min);
     return 0;
 }
