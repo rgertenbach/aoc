@@ -23,37 +23,6 @@ log_particles(
     LOG(level, "%s", line);
 }
 
-size_t
-remove_collisions(struct Particle * particles, size_t n)
-{
-    qsort(particles, n, sizeof(*particles), l1_difference);
-    size_t left = 0, right = 0;
-    while (right < n - 1) {
-        size_t off = 1;
-        if (V3_eq(particles[right].pos, particles[right + off].pos)) {
-            // LOG(LOG_DEBUG, "Found duplicates at %zu:\n", right);
-            // log_particles(LOG_DEBUG, particles, n);
-            while (right + off < n
-                   && V3_eq(particles[right].pos, particles[right + off].pos)
-            ) {
-                off++;
-            }
-            if (right + off >= n) {
-                return left;
-            } else {
-                right = right + off;
-            }
-        } else {
-            particles[left++] = particles[right++];
-        }
-    }
-    if (right == n - 1) {
-        particles[left++] = particles[right];
-        return left;
-    }
-    return left;
-}
-
 int
 main(int const argc, char const * const * const argv)
 {

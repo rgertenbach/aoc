@@ -6,6 +6,7 @@ clang \
     -Wall -Wextra -Werror -pedantic \
     -o 'particle_test' \
     -std=c23 \
+    -g \
     particle_test.c \
     particle.c
 
