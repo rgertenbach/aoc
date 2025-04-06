@@ -36,4 +36,6 @@ int particle_sort(void const * const a, void const * const b);
 
 size_t
 remove_collisions(struct Particle * particles, size_t n);
+
+size_t remove_collisions2(struct Particle * particles, size_t n);
 #endif  // PARTICLE_H_

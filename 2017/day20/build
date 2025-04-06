@@ -10,12 +10,10 @@ clang \
     particle_test.c \
     particle.c
 
-./particle_test
-if [ $? ]; then
+
+if ! ./particle_test; then
     exit
 fi
-
-
 
 
 clang \

@@ -4,7 +4,7 @@
 #include <string.h>
 #define LOG_IMPL
 #include "/home/robin/src/clib/logging/log.h"
-enum LogLevel LOG_LEVEL = LOG_DEBUG;
+enum LogLevel LOG_LEVEL = LOG_INFO;
 
 #define MAXLEN 1000
 
@@ -35,42 +35,30 @@ main(int const argc, char const * const * const argv)
         fprintf(stderr, "Could not open %s\n", argv[1]);
         exit(1);
     }
-    // char s[MAXLEN];
-    // struct Particle particles[MAXLEN];
-    // size_t np = 0;
-    // while (fgets(s, MAXLEN, f)) {
-    //     s[strlen(s) - 1] = '\0';  // Trim newline.
-    //     particles[np] = parse_particle(s, np);
-    //     np++;
-    // }
-    // fclose(f);
+    char s[MAXLEN];
+    struct Particle particles[MAXLEN];
+    size_t np = 0;
+    while (fgets(s, MAXLEN, f)) {
+        s[strlen(s) - 1] = '\0';  // Trim newline.
+        particles[np] = parse_particle(s, np);
+        np++;
+    }
+    fclose(f);
 
-    struct Particle particles[5] = {
-        {.pos = {0, 0, 0}},
-        {.pos = {1, 0, 0}},
-        {.pos = {1, 0, 0}},
-        {.pos = {0, 0, 0}},
-        {.pos = {1, 0, 0}},
-    };
-    size_t np = 5;
     np = remove_collisions(particles, np);
-    log_particles(LOG_DEBUG, particles, np);
-
-    // np = remove_collisions(particles, np);
-    // for (size_t iter = 0; iter < 50; iter++) {
-    //     LOG(LOG_DEBUG, "%zu: Moving %zu particles\n", iter, np);
-    //     for (size_t i = 0; i < np; ++i) {
-    //         particles[i] = move(particles[i]);
-    //     }
-    //     size_t new_np = remove_collisions(particles, np);
-    //     if (np != new_np) {
-    //         LOG(LOG_INFO, "Found overlaps at iter %zu, from %zu to %zu\n", iter,
-    //             np, new_np);
-    //     }
-    //     np = new_np;
-    // }
+    for (size_t iter = 0; iter < 1000; iter++) {
+        LOG(LOG_DEBUG, "%zu: Moving %zu particles\n", iter, np);
+        for (size_t i = 0; i < np; ++i) {
+            particles[i] = move(particles[i]);
+        }
+        size_t new_np = remove_collisions2(particles, np);
+        if (np != new_np) {
+            LOG(LOG_INFO, "Found overlaps at iter %zu, from %zu to %zu\n", iter,
+                np, new_np);
+        }
+        np = new_np;
+    }
 
     printf("Part 2: %zu\n", np);
     return 0;
-    // 582 too high.
 }

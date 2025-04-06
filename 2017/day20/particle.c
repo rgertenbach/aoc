@@ -2,6 +2,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <uthash.h>
 
 int64_t
 abs64(int64_t x)
@@ -136,3 +137,41 @@ remove_collisions(struct Particle * particles, size_t n)
     return left;
 }
 
+struct ParticleHash {
+    struct V3 pos;
+    struct Particle particles[20];
+    size_t sz;
+    struct UT_hash_handle hh;
+};
+
+size_t
+remove_collisions2(struct Particle * particles, size_t n)
+{
+    // printf("Removing collisions\n");
+    struct ParticleHash *by_position = NULL, *lookup, *next;
+    for (size_t i = 0; i < n; ++i) {
+        lookup = NULL;
+        HASH_FIND(
+            hh, by_position, &(particles[i].pos), sizeof(struct V3), lookup
+        );
+        if (!lookup) {
+            lookup = malloc(sizeof(struct ParticleHash));
+            lookup->sz = 0;
+            lookup->pos = particles[i].pos;
+            HASH_ADD(hh, by_position, pos, sizeof(struct V3), lookup);
+        }
+        lookup->particles[lookup->sz++] = particles[i];
+    }
+    n = 0;
+    HASH_ITER(hh, by_position, lookup, next)
+    {
+        if (lookup->sz == 1) {
+            particles[n++] = lookup->particles[0];
+        } else {
+            HASH_DELETE(hh, by_position, lookup);
+            free(lookup);
+        }
+    }
+
+    return n;
+}

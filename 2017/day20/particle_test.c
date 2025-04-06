@@ -128,17 +128,17 @@ test_particle_sort(void)
 char *
 test_remove_collisions(void)
 {
-    struct Particle particles[5];
-    struct Particle want[5];
+    struct Particle particles[10];
+    struct Particle want[10];
     size_t n;
 
-    memset(particles, 0, 5 * sizeof(*particles));
+    memset(particles, 0, 10 * sizeof(*particles));
     particles[0].pos = (struct V3){ 3, 0, 0 };
     particles[1].pos = (struct V3){ 0, 0, 0 };
     particles[2].pos = (struct V3){ 1, 0, 0 };
     particles[3].pos = (struct V3){ 2, 0, 0 };
     particles[4].pos = (struct V3){ 4, 0, 0 };
-    memset(want, 0, 5 * sizeof(*particles));
+    memset(want, 0, 10 * sizeof(*particles));
     want[0].pos = (struct V3){ 0, 0, 0 };
     want[1].pos = (struct V3){ 1, 0, 0 };
     want[2].pos = (struct V3){ 2, 0, 0 };
@@ -147,26 +147,26 @@ test_remove_collisions(void)
     n = remove_collisions(particles, 5);
     mu_test_particles_eq("No duplicates", want, particles, 5, n);
 
-    memset(particles, 0, 5 * sizeof(*particles));
+    memset(particles, 0, 10 * sizeof(*particles));
     particles[0].pos = (struct V3){ 1, 0, 0 };
     particles[1].pos = (struct V3){ 1, 0, 0 };
     particles[2].pos = (struct V3){ 2, 0, 0 };
     particles[3].pos = (struct V3){ 3, 0, 0 };
     particles[4].pos = (struct V3){ 4, 0, 0 };
-    memset(want, 0, 5 * sizeof(*particles));
+    memset(want, 0, 10 * sizeof(*particles));
     want[0].pos = (struct V3){ 2, 0, 0 };
     want[1].pos = (struct V3){ 3, 0, 0 };
     want[2].pos = (struct V3){ 4, 0, 0 };
     n = remove_collisions(particles, 5);
     mu_test_particles_eq("Dupes at beginning", want, particles, 3, n);
 
-    memset(particles, 0, 5 * sizeof(*particles));
+    memset(particles, 0, 10 * sizeof(*particles));
     particles[0].pos = (struct V3){ 1, 0, 0 };
     particles[1].pos = (struct V3){ 1, 0, 0 };
     particles[2].pos = (struct V3){ 1, 1, 0 };
     particles[3].pos = (struct V3){ 1, 1, 0 };
     particles[4].pos = (struct V3){ 4, 0, 0 };
-    memset(want, 0, 5 * sizeof(*particles));
+    memset(want, 0, 10 * sizeof(*particles));
     want[0].pos = (struct V3){ 4, 0, 0 };
     n = remove_collisions(particles, 5);
     mu_test_particles_eq("Many dupes at beginning", want, particles, 1, n);
@@ -179,38 +179,38 @@ test_remove_collisions(void)
     n = remove_collisions(particles, 5);
     mu_test_particles_eq("All dupes", want, particles, 0, n);
 
-    memset(particles, 0, 5 * sizeof(*particles));
+    memset(particles, 0, 10 * sizeof(*particles));
     particles[0].pos = (struct V3){ 3, 0, 0 };
     particles[1].pos = (struct V3){ 0, 0, 0 };
     particles[2].pos = (struct V3){ 1, 0, 0 };
     particles[3].pos = (struct V3){ 4, 0, 0 };
     particles[4].pos = (struct V3){ 4, 0, 0 };
-    memset(want, 0, 5 * sizeof(*particles));
+    memset(want, 0, 10 * sizeof(*particles));
     want[0].pos = (struct V3){ 0, 0, 0 };
     want[1].pos = (struct V3){ 1, 0, 0 };
     want[2].pos = (struct V3){ 3, 0, 0 };
     n = remove_collisions(particles, 5);
     mu_test_particles_eq("Dupes at end", want, particles, 3, n);
 
-    memset(particles, 0, 5 * sizeof(*particles));
+    memset(particles, 0, 10 * sizeof(*particles));
     particles[0].pos = (struct V3){ 3, 0, 0 };
     particles[1].pos = (struct V3){ 0, 0, 0 };
     particles[2].pos = (struct V3){ 4, 0, 0 };
     particles[3].pos = (struct V3){ 4, 0, 0 };
     particles[4].pos = (struct V3){ 4, 0, 0 };
-    memset(want, 0, 5 * sizeof(*particles));
+    memset(want, 0, 10 * sizeof(*particles));
     want[0].pos = (struct V3){ 0, 0, 0 };
     want[1].pos = (struct V3){ 3, 0, 0 };
     n = remove_collisions(particles, 5);
     mu_test_particles_eq("Many dupes at end", want, particles, 2, n);
 
-    memset(particles, 0, 5 * sizeof(*particles));
+    memset(particles, 0, 10 * sizeof(*particles));
     particles[0].pos = (struct V3){ 0, 0, 0 };
     particles[1].pos = (struct V3){ 1, 0, 0 };
     particles[2].pos = (struct V3){ 2, 0, 0 };
     particles[3].pos = (struct V3){ 2, 0, 0 };
     particles[4].pos = (struct V3){ 4, 0, 0 };
-    memset(want, 0, 5 * sizeof(*particles));
+    memset(want, 0, 10 * sizeof(*particles));
     want[0].pos = (struct V3){ 0, 0, 0 };
     want[1].pos = (struct V3){ 1, 0, 0 };
     want[2].pos = (struct V3){ 4, 0, 0 };
@@ -218,17 +218,35 @@ test_remove_collisions(void)
     n = remove_collisions(particles, 5);
     mu_test_particles_eq("Dupes in middle", want, particles, 3, n);
 
-    memset(particles, 0, 5 * sizeof(*particles));
+    memset(particles, 0, 10 * sizeof(*particles));
     particles[0].pos = (struct V3){ 0, 0, 0 };
     particles[1].pos = (struct V3){ 2, 0, 0 };
     particles[2].pos = (struct V3){ 2, 0, 0 };
     particles[3].pos = (struct V3){ 2, 0, 0 };
     particles[4].pos = (struct V3){ 4, 0, 0 };
-    memset(want, 0, 5 * sizeof(*particles));
+    memset(want, 0, 10 * sizeof(*particles));
     want[0].pos = (struct V3){ 0, 0, 0 };
     want[1].pos = (struct V3){ 4, 0, 0 };
     n = remove_collisions(particles, 5);
     mu_test_particles_eq("Many Dupes in middle", want, particles, 2, n);
+
+    memset(particles, 0, 10 * sizeof(*particles));
+    particles[0].pos = (struct V3){ 0, 0, 0 };
+    particles[1].pos = (struct V3){ 1, 0, 0 };
+    particles[2].pos = (struct V3){ 1, 0, 0 };
+    particles[3].pos = (struct V3){ 2, 0, 0 };
+    particles[4].pos = (struct V3){ 3, 0, 0 };
+    particles[5].pos = (struct V3){ 3, 0, 0 };
+    particles[6].pos = (struct V3){ 3, 0, 0 };
+    particles[7].pos = (struct V3){ 4, 0, 0 };
+    particles[8].pos = (struct V3){ 5, 0, 0 };
+    particles[9].pos = (struct V3){ 5, 0, 0 };
+    memset(want, 0, 10 * sizeof(*particles));
+    want[0].pos = (struct V3){ 0, 0, 0 };
+    want[1].pos = (struct V3){ 2, 0, 0 };
+    want[2].pos = (struct V3){ 4, 0, 0 };
+    n = remove_collisions(particles, 10);
+    mu_test_particles_eq("Many sets of Dupes", want, particles, 3, n);
     return NULL;
 }
 
@@ -250,4 +268,5 @@ int
 main(void)
 {
     mu_main(all_tests);
+    return tests_failed;
 }
