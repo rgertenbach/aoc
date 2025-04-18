@@ -1,0 +1,27 @@
+#!/bin/sh
+name="$1"
+file="$2"
+
+clang \
+    -Wall -Wextra -Werror -pedantic \
+    automaton.c \
+    automaton_test.c \
+    -g \
+    -std=c23 \
+    -o automaton_test
+
+if ! ./automaton_test; then
+    exit
+fi
+
+
+clang \
+    -Wall -Wextra -Werror -pedantic \
+    -o "${name}" \
+    -std=c23 \
+    "${name}.c" \
+    'automaton.c'
+
+"./${name}" "${file}"
+
+rm "${name}"
