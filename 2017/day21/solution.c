@@ -28,13 +28,18 @@ int main(int const argc, char const * const * const argv)
     }
     fclose(f);
 
-    char grid[GRID_MAX_N][GRID_MAX_N] = { ".#.", "..#", "###" };
-    char next_grid[GRID_MAX_N][GRID_MAX_N];
+    Grid_t grid; 
+    grid_init(grid);
+    Grid_t next_grid;
+    grid_init(next_grid);
+    strcpy(grid[0], ".#.");
+    strcpy(grid[1], "..#");
+    strcpy(grid[2], "###");
     size_t n = 3;
 
-    for (size_t i = 0; i < 15; ++i) {
+    for (size_t i = 0; i < 18; ++i) {
         n = grow(next_grid, grid, n, replacements, n_replacements);
-        memcpy(grid, next_grid, sizeof(Grid_t));
+        grid_copy(grid, next_grid);
         printf("Step %zu: %zu n: %zu\n", i + 1, count(grid, n), n);
 
     }

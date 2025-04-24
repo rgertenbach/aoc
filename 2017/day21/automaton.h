@@ -1,10 +1,11 @@
 #ifndef AUTOMATON_H_
 #define AUTOMATON_H_
 
-#define GRID_MAX_N 1000
+#define GRID_MAX_N 2500
+#define SIZEOF_GRID (GRID_MAX_N * GRID_MAX_N)
 #include <stdlib.h>
 
-typedef char Grid_t[GRID_MAX_N][GRID_MAX_N];
+typedef char * Grid_t[GRID_MAX_N];
 
 struct Pattern {
     char pattern[16];
@@ -17,6 +18,10 @@ struct Replacement {
 };
 
 struct Replacement parse_replacement(char const * const s);
+
+void grid_init(Grid_t grid);
+void grid_delete(Grid_t grid);
+void grid_copy(Grid_t dest, Grid_t source);
 
 struct Pattern pattern_at(
     size_t const row, size_t const col, Grid_t grid, size_t const stride

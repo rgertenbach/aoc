@@ -38,6 +38,7 @@ char *
 test_pattern_at(void)
 {
     Grid_t grid;
+    grid_init(grid);
     strcpy(grid[0], "#.0000");
     strcpy(grid[1], "#.1111");
     strcpy(grid[2], "##2222");
@@ -176,9 +177,13 @@ test_find_replacement(void)
 char *
 test_grow(void)
 {
-    Grid_t grid = { ".#", ".." };
+    Grid_t grid;
+    grid_init(grid);
+    strcpy(grid[0], ".#");
+    strcpy(grid[1], "..");
     size_t grid_sz = 2;
     Grid_t got;
+    grid_init(got);
 
     // ..     ...      ....
     // .#  -> ...  ->  .#.#
@@ -209,7 +214,7 @@ test_grow(void)
     mu_test("2->3 row 1", !strncmp(got[1], "...", 3), MU_NO_CLEANUP);
     mu_test("2->3 row 2", !strncmp(got[2], "..#", 3), MU_NO_CLEANUP);
 
-    memcpy(grid, got, sizeof(Grid_t));
+    grid_copy(grid, got);
     grid_sz = grow(got, grid, grid_sz, patterns, 2);
     mu_test_equal("3->4 Size", grid_sz, 4, MU_NO_CLEANUP);
     mu_test("3->4 row 0", !strncmp(got[0], "....", 4), MU_NO_CLEANUP);
@@ -217,7 +222,7 @@ test_grow(void)
     mu_test("3->4 row 2", !strncmp(got[2], "....", 4), MU_NO_CLEANUP);
     mu_test("3->4 row 3", !strncmp(got[3], ".#.#", 4), MU_NO_CLEANUP);
 
-    memcpy(grid, got, sizeof(Grid_t));
+    grid_copy(grid, got);
     grid_sz = grow(got, grid, grid_sz, patterns, 2);
     mu_test_equal("4->6 Size", grid_sz, 6, MU_NO_CLEANUP);
     mu_test("4->6 row 0", !strncmp(got[0], "......", 6), MU_NO_CLEANUP);

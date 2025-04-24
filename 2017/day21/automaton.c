@@ -215,7 +215,8 @@ grow(
     size_t new_stride = stride + 1;
     for (size_t row = 0; row < segments; row++) {
         for (size_t col = 0; col < segments; col++) {
-            struct Pattern c = pattern_at(row * stride, col * stride, grid, stride);
+            struct Pattern c =
+                pattern_at(row * stride, col * stride, grid, stride);
             struct Pattern new = find_replacement(c, repls, nrepl);
             insert_pattern(dest, new, row * new_stride, col * new_stride);
         }
@@ -258,4 +259,24 @@ format_pattern(char * const dest, struct Pattern const p)
         dest[(row + 1) * (p.stride + 1)] = '\n';
     }
     dest[(p.stride + 1) * p.stride] = '\n';
+}
+
+void
+grid_init(Grid_t grid)
+{
+    char * raw = malloc(GRID_MAX_N * GRID_MAX_N);
+    memset(raw, 0, GRID_MAX_N * GRID_MAX_N);
+    for (size_t i = 0; i < GRID_MAX_N; ++i) {
+        grid[i] = raw + i * GRID_MAX_N;
+    }
+}
+
+void grid_delete(Grid_t grid)
+{
+    free(grid[0]);
+}
+
+void grid_copy(Grid_t dest, Grid_t source)
+{
+    memcpy(*dest, *source, SIZEOF_GRID);
 }
