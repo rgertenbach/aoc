@@ -1,0 +1,14 @@
+#!/bin/sh
+name="$1"
+file="$2"
+
+clang \
+    -Wall -Wextra -Werror -pedantic \
+    -o "${name}" \
+    -g \
+    "${name}.c" \
+    pos.c
+
+"./${name}" "${file}"
+
+rm "${name}"
