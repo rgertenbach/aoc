@@ -23,28 +23,38 @@ main(int const argc, char const * const * const argv)
         exit(1);
     }
     char s[MAXLEN];
-    struct PositionSet * infected = NULL;
+    struct PositionSet * infected1 = NULL;
+    struct PositionSet * infected2 = NULL;
 
     int64_t rows = 0;
     while (fgets(s, MAXLEN, f)) {
         s[strlen(s) - 1] = '\0';  // Trim newline.
         for (int64_t col = 0; s[col] != '\0'; ++col) {
             if (s[col] == INFECTED) {
-                PositionSet_add(&infected, (struct Position) {rows, col});
+                PositionSet_set(&infected1, (struct Position) {rows, col}, STATE_INFECTED);
+                PositionSet_set(&infected2, (struct Position) {rows, col}, STATE_INFECTED);
             }
         }
         rows++;
     }
-
     fclose(f);
+
     struct Carrier carrier = {.pos = {rows / 2, rows / 2}, DIR_NORTH};
     struct BurstResult result;
     size_t newly_infected = 0;
     for (size_t i = 0; i < 10000; ++i) {
-        result = burst(carrier, &infected);
+        result = burst1(carrier, &infected1);
         newly_infected += result.newly_infected;
         carrier = result.carrier;
     }
     printf("Part 1: %zu\n", newly_infected);
+    carrier = (struct Carrier) {.pos = {rows / 2, rows / 2}, DIR_NORTH};
+    newly_infected = 0;
+    for (size_t i = 0; i < 10000000; ++i) {
+        result = burst2(carrier, &infected2);
+        newly_infected += result.newly_infected;
+        carrier = result.carrier;
+    }
+    printf("Part 2: %zu\n", newly_infected);
     return 0;
 }

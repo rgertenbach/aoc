@@ -1,28 +1,36 @@
 #include "pos.h"
 #include <stdbool.h>
+#include <stdio.h>
 #include <uthash.h>
 
 struct PositionSet *
-PositionSet_has(struct PositionSet ** set, struct Position pos)
+PositionSet_get(struct PositionSet ** set, struct Position pos)
 {
     struct PositionSet * f = NULL;
     HASH_FIND(hh, *set, &pos, sizeof(pos), f);
+    if (f == NULL) {
+        f = malloc(sizeof(*f));
+        f->pos = pos;
+        f->state = STATE_CLEAN;
+        HASH_ADD(hh, *set, pos, sizeof(pos), f);
+    }
+
     return f;
 }
 
 void
-PositionSet_add(struct PositionSet ** set, struct Position pos)
+PositionSet_set(
+    struct PositionSet ** set, struct Position pos, enum State state
+)
 {
-    if (PositionSet_has(set, pos)) { return; }
-    struct PositionSet * new = malloc(sizeof(struct PositionSet));
-    memcpy(&(new->pos), &pos, sizeof(pos));
-    HASH_ADD(hh, *set, pos, sizeof(pos), new);
+    struct PositionSet * setting = PositionSet_get(set, pos);
+    setting->state = state;
 }
 
 void
 PositionSet_del(struct PositionSet ** set, struct Position pos)
 {
-    struct PositionSet * f = PositionSet_has(set, pos);
+    struct PositionSet * f = PositionSet_get(set, pos);
     if (f) {
         HASH_DEL(*set, f);
         free(f);
@@ -51,6 +59,17 @@ turn_right(enum Direction dir)
     }
 }
 
+enum Direction
+turn_around(enum Direction dir)
+{
+    switch (dir) {
+    case DIR_NORTH: return DIR_SOUTH;
+    case DIR_WEST: return DIR_EAST;
+    case DIR_SOUTH: return DIR_NORTH;
+    case DIR_EAST: return DIR_WEST;
+    }
+}
+
 struct Carrier
 Carrier_move(struct Carrier carrier)
 {
@@ -60,22 +79,54 @@ Carrier_move(struct Carrier carrier)
     case DIR_SOUTH: carrier.pos.row++; break;
     case DIR_WEST: carrier.pos.col--; break;
     }
-	return carrier;
+    return carrier;
 }
 
 struct BurstResult
-burst(struct Carrier carrier, struct PositionSet ** infected)
+burst1(struct Carrier carrier, struct PositionSet ** infected)
 {
-	bool newly_infected = false;
-    if (PositionSet_has(infected, carrier.pos)) {
+    struct PositionSet * pos = PositionSet_get(infected, carrier.pos);
+    switch (pos->state) {
+    case STATE_INFECTED:
+        pos->state = STATE_CLEAN;
         carrier.dir = turn_right(carrier.dir);
-        PositionSet_del(infected, carrier.pos);
-    } else {
+        break;
+    case STATE_CLEAN:
+        pos->state = STATE_INFECTED;
         carrier.dir = turn_left(carrier.dir);
-        PositionSet_add(infected, carrier.pos);
-		newly_infected = true;
+        break;
+    default: break;
     }
-	carrier = Carrier_move(carrier);
 
-	return (struct BurstResult) { carrier, newly_infected };
+    carrier = Carrier_move(carrier);
+
+    return (struct BurstResult){ carrier, pos->state == STATE_INFECTED };
+}
+
+struct BurstResult
+burst2(struct Carrier carrier, struct PositionSet ** infected)
+{
+    struct PositionSet * pos = PositionSet_get(infected, carrier.pos);
+    switch (pos->state) {
+    case STATE_INFECTED:
+        pos->state = STATE_FLAGGED;
+        carrier.dir = turn_right(carrier.dir);
+        break;
+    case STATE_FLAGGED:
+        pos->state = STATE_CLEAN;
+        carrier.dir = turn_around(carrier.dir);
+        break;
+    case STATE_CLEAN:
+        pos->state = STATE_WEAK;
+        carrier.dir = turn_left(carrier.dir);
+        break;
+    case STATE_WEAK:
+        pos->state = STATE_INFECTED;
+        break;
+
+    }
+
+    carrier = Carrier_move(carrier);
+
+    return (struct BurstResult){ carrier, pos->state == STATE_INFECTED };
 }

@@ -10,9 +10,17 @@ struct Position {
     int64_t col;
 };
 
+enum State {
+    STATE_CLEAN = 0,
+    STATE_WEAK = 1,
+    STATE_INFECTED = 2,
+    STATE_FLAGGED = 3,
+};
+
 struct PositionSet {
     UT_hash_handle hh;
     struct Position pos;
+    enum State state;
 };
 
 enum Direction {
@@ -33,14 +41,19 @@ struct BurstResult {
 };
 
 struct PositionSet *
-PositionSet_has(struct PositionSet ** set, struct Position pos);
-void PositionSet_add(struct PositionSet ** set, struct Position pos);
+PositionSet_get(struct PositionSet ** set, struct Position pos);
+void PositionSet_set(
+    struct PositionSet ** set, struct Position pos, enum State state
+);
 void PositionSet_del(struct PositionSet ** set, struct Position pos);
 
 enum Direction turn_left(enum Direction);
 enum Direction turn_right(enum Direction);
+enum Direction turn_around(enum Direction);
 struct Carrier Carrier_move(struct Carrier carrier);
 
 struct BurstResult
-burst(struct Carrier carrier, struct PositionSet ** infected);
+burst1(struct Carrier carrier, struct PositionSet ** infected);
+struct BurstResult
+burst2(struct Carrier carrier, struct PositionSet ** infected);
 #endif  // POS_H
