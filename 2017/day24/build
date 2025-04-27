@@ -6,7 +6,8 @@ clang \
     -Wall -Wextra -Werror -pedantic \
     -o "${name}" \
     -g \
-    "${name}.c"
+    "${name}.c" \
+    graph.c
 
 "./${name}" "${file}"
 
