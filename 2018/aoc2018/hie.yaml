@@ -3,11 +3,11 @@ cradle:
     - path: "./src"
       component: "aoc2018:lib"
 
-    - path: "./app/Main.hs"
-      component: "aoc2018:exe:aoc2018-exe"
-
     - path: "./day01/Main.hs"
       component: "aoc2018:exe:day01"
+
+    - path: "./day02/Main.hs"
+      component: "aoc2018:exe:day02"
 
     - path: "./test"
       component: "aoc2018:test:aoc2018-test"

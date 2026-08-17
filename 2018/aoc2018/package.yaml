@@ -7,8 +7,7 @@ maintainer:          "RobinGertenbach@gmail.com"
 copyright:           "2026 Robin Gertenbach"
 
 extra-source-files:
-- README.md
-- CHANGELOG.md
+  Template.hs
 
 # Metadata used when publishing your package
 # synopsis:            Short description of your package
@@ -47,6 +46,16 @@ executables:
     dependencies:
     - aoc2018
     - containers
+
+  day02:
+    main:               Main.hs
+    source-dirs:        day02
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - aoc2018
 
 tests:
   aoc2018-test:
