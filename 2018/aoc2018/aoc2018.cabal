@@ -64,6 +64,21 @@ executable day02
     , base >=4.7 && <5
   default-language: Haskell2010
 
+executable day03
+  main-is: Main.hs
+  other-modules:
+      Paths_aoc2018
+  autogen-modules:
+      Paths_aoc2018
+  hs-source-dirs:
+      day03
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aoc2018
+    , base >=4.7 && <5
+    , containers
+  default-language: Haskell2010
+
 test-suite aoc2018-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
