@@ -5,7 +5,7 @@ Year | Language       | Progress
 2015 | Lua            | 50 / 50
 2016 | Lua            | 50 / 50
 2017 | C              | 50 / 50
-2018 | Haskell        | 8 / 50
+2018 | Haskell        | 10/ 50
 2019 |                | 0 / 50
 2020 | Python / C++   | 26 / 50
 2021 | Python         | 41 / 50
