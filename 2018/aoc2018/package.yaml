@@ -35,6 +35,17 @@ ghc-options:
 library:
   source-dirs: src
 
+tests:
+  aoc2018-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - aoc2018
+
 executables:
   day01:
     main:               Main.hs
@@ -100,15 +111,14 @@ executables:
     dependencies:
     - aoc2018
     - containers
-
-
-tests:
-  aoc2018-test:
-    main:                Spec.hs
-    source-dirs:         test
+  day07:
+    main:               Main.hs
+    source-dirs:        day07
     ghc-options:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
     - aoc2018
+    - containers
+
