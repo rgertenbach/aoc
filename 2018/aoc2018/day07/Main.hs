@@ -2,7 +2,7 @@ module Main (main) where
 
 import App (Solution, run)
 import Data.Char (ord)
-import Data.List (sort, sortBy)
+import Data.List (sortBy)
 import qualified Data.Map as Map
 import Data.Ord (comparing)
 import qualified Text.ParserCombinators.ReadP as P
