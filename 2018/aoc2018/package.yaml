@@ -144,3 +144,14 @@ executables:
     - aoc2018
     - containers
 
+  day10:
+    main:               Main.hs
+    source-dirs:        day10
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - aoc2018
+    - containers
+

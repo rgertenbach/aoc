@@ -28,12 +28,8 @@ initialGameState numPlayers =
       marbles = Seq.fromList [0]
     }
 
--- Number of marbles in the game before acting on this one.
-marblesInGame :: Int -> Int
-marblesInGame marble = marble - 2 * ((marble - 1) `div` 23)
-
 incPlayer :: Int -> Int -> Int
-incPlayer numPlayers player = (player + 1) `mod` numPlayers
+incPlayer numPlayers player = player `mod` numPlayers + 1
 
 addMarble :: GameState -> Int -> GameState
 addMarble GameState {players, active, scores, marbles = Empty} _ =
@@ -50,7 +46,7 @@ addMarble GameState {players, active, scores, marbles = m@(x :<| y :<| ys)} new
       GameState
         { players,
           active = incPlayer players active,
-          scores = Map.update updateScore active scores,
+          scores = Map.insertWith (+) active (new + otherRemoved) scores,
           marbles = Seq.drop 1 $ right <> left
         }
   | otherwise =
@@ -61,9 +57,8 @@ addMarble GameState {players, active, scores, marbles = m@(x :<| y :<| ys)} new
           marbles = (new :<| ys) :|> x :|> y
         }
   where
-    (left, right) = Seq.splitAt (marblesInGame new - 7) m
+    (left, right) = Seq.splitAt (Seq.length m - 7) m
     otherRemoved = sum $ Seq.take 1 right
-    updateScore s = Just $ s + new + otherRemoved
 
 parseLine :: String -> (Int, Int)
 parseLine s = (numPlayers, pointsLast)
@@ -75,7 +70,7 @@ play :: (Int, Int) -> Int
 play (numPlayers, pointsLast) = maximum $ map snd $ Map.toList $ scores finalState
   where
     marbles = [1 .. pointsLast]
-    finalState = foldl addMarble (initialGameState numPlayers) marbles
+    finalState = foldl' addMarble (initialGameState numPlayers) marbles
 
 part1 :: Solution
 part1 s = Right $ show $ map play $ map parseLine $ lines s
