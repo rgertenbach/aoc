@@ -155,3 +155,14 @@ executables:
     - aoc2018
     - containers
 
+  day11:
+    main:               Main.hs
+    source-dirs:        day11
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - aoc2018
+    - vector
+
