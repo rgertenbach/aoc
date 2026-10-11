@@ -18,5 +18,5 @@ cat >> package.yaml << EOF
 
 EOF
 
-stack build
+stack build day$1
 gen-hie > hie.yaml

@@ -36,5 +36,8 @@ cradle:
     - path: "./day11/Main.hs"
       component: "aoc2018:exe:day11"
 
+    - path: "./day12/Main.hs"
+      component: "aoc2018:exe:day12"
+
     - path: "./test"
       component: "aoc2018:test:aoc2018-test"
